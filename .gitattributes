@@ -1,0 +1,25 @@
+# Auto detect text files and normalize line endings to LF
+# 저장소에는 모든 텍스트 파일이 LF 줄 끝으로 저장되고,
+# 체크아웃 시에도 LF로 유지 (가장 일관적인 방법)
+* text=auto eol=lf
+
+# 쉘 스크립트는 항상 LF 줄 끝을 사용하도록 강제 (macOS/Linux 호환성 중요)
+*.sh text eol=lf
+
+# Denote all files that are truly binary and should not be touched
+*.jpg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.mov binary
+*.exe binary
+*.dll binary
+*.obj binary
+# 필요한 경우 다른 바이너리 파일 확장자를 추가
