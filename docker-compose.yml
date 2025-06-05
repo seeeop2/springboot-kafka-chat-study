@@ -1,0 +1,18 @@
+services:
+  kafka:
+    image: bitnami/kafka:4.0.0
+    container_name: KafkaChat-kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker # Kraft 모드 설정
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LOG_DIRS=/bitnami/kafka/data # Kafka 로그/데이터 저장 경로
+      - KAFKA_KRAFT_CLUSTER_ID=kraft-cluster-01 # Kraft 클러스터 ID
+    volumes:
+      - ./kafka_data:/bitnami/kafka # 호스트 폴더와 컨테이너 폴더 연결

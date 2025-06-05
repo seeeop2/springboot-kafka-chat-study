@@ -278,3 +278,7 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij+all,intellij+iml,windows,macos,visualstudiocode
+
+# docker-compose.yml 에서 kafka 데이터 볼륨을 지정했기 때문에 Docker 컨테이너를 생성하면 추가되는 폴더임.
+/kafka_data/
+
