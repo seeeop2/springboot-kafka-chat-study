@@ -4,6 +4,7 @@ import com.example.kafkachat.backend.chat.dto.ChatMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
  * Kafka를 통해 채팅 메시지를 전송하는 프로듀서 클래스입니다.
  * 이 클래스는 메시지를 JSON 형식으로 직렬화하여 지정된 Kafka 토픽으로 전송합니다.
  */
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class ChatKafkaProducer {
@@ -34,7 +36,7 @@ public class ChatKafkaProducer {
             kafkaTemplate.send("chat-room", chatMessage.getRoomId(), jsonMessage);
 
             // 메시지 전송 성공 로그를 출력합니다.
-            System.out.println("Kafka 전송 완료 → " + jsonMessage);
+            log.info("Kafka 전송 완료 → {}", jsonMessage);
         } catch (JsonProcessingException e) {
             // 직렬화 실패 시 런타임 예외를 발생시킵니다.
             throw new RuntimeException("Kafka 메시지 직렬화 실패", e);

@@ -4,6 +4,7 @@ import com.example.kafkachat.backend.chat.dto.ChatMessage;
 import com.example.kafkachat.backend.chat.service.ChatService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Component;
  * - 'chat-room' 토픽에서 메시지를 수신합니다.
  * - 수신한 메시지는 ChatService로 전달되어 DB 저장, WebSocket 브로드캐스트 등 추가 처리가 가능합니다.
  */
-@Component
+@Slf4j
 @RequiredArgsConstructor
+@Component
 public class ChatKafkaConsumer {
 
     private final ObjectMapper objectMapper;
@@ -32,12 +34,12 @@ public class ChatKafkaConsumer {
             // Kafka에서 받은 JSON 문자열을 ChatMessage 객체로 변환
             ChatMessage message = objectMapper.readValue(record.value(), ChatMessage.class);
             // 수신한 메시지 콘솔 출력 (운영 환경에서는 로그 관리 필요)
-            System.out.println("유저용 Kafka 수신 메시지: " + message);
+            log.info("[chat-group] 유저용 Kafka 수신 메시지: {}", message);
             // ChatService로 메시지 전달 (DB 저장, WebSocket 전송 등)
             chatService.handleReceivedMessage(message);
         } catch (Exception e) {
             // 역직렬화 또는 처리 중 예외 발생 시 에러 로그 출력
-            System.err.println("[chat-group] 처리 실패: " + e.getMessage());
+            log.error("[chat-group] 처리 실패", e);
         }
     }
 
@@ -52,10 +54,11 @@ public class ChatKafkaConsumer {
             // Kafka에서 받은 JSON 문자열을 ChatMessage 객체로 변환
             ChatMessage message = objectMapper.readValue(record.value(), ChatMessage.class);
             // 로그용 메시지 콘솔 출력 (운영 환경에서는 별도 저장 처리 필요)
-            System.out.println("🗃[log-group] 채팅 로그 저장용 수신: " + message);
+            log.info("🗃[log-group] 채팅 로그 수신 메시지: {}", message);
         } catch (Exception e) {
             // 예외 발생 시 에러 로그 출력
-            System.err.println("[log-group] 처리 실패: " + e.getMessage());
+            log.error("[log-group] 처리 실패: {}", e.getMessage());
         }
     }
 }
+
